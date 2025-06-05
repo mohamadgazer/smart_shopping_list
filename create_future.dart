@@ -5,7 +5,6 @@ import 'dart:io';
 import 'package:yaml/yaml.dart';
 
 void main() {
-  // توفير خيارين للمستخدم
   print("Enter your choice:");
   print("1. Create one future ");
   print("2. Create Multiple future");
@@ -13,10 +12,8 @@ void main() {
   String? choice = stdin.readLineSync();
 
   if (choice == '1') {
-    // إذا اختار المستخدم future واحدة
     createSingleFuture();
   } else if (choice == '2') {
-    // إذا اختار المستخدم إنشاء عدة futures
     createMultipleFutures();
   } else {
     print("not valid input");
@@ -24,11 +21,9 @@ void main() {
 }
 
 void createSingleFuture() {
-  // طلب اسم الـ future
   print("Enter future Name (if name is empty \"newFuture\"):");
   String? futureName = stdin.readLineSync();
 
-  // إذا لم يُدخل المستخدم اسمًا، استخدام الاسم الافتراضي
   if (futureName == null || futureName.isEmpty) {
     futureName = 'newFuture';
   }
@@ -41,7 +36,6 @@ void createSingleFuture() {
 void createMultipleFutures() {
   List<String> futureNames = [];
 
-  // التكرار لطلب الأسماء من المستخدم
   while (true) {
     print("أدخل اسم future (أدخل 'X' لإنهاء الإدخال):");
     String? futureName = stdin.readLineSync();
@@ -55,7 +49,6 @@ void createMultipleFutures() {
     }
   }
 
-  // إنشاء المجلدات والملفات لكل اسم
   for (String name in futureNames) {
     createFutureStructure(name);
     addRouteToCore(name);
@@ -64,14 +57,14 @@ void createMultipleFutures() {
 }
 
 void createFutureStructure(String futureName) {
-  // مسار المشروع
   final projectPath = "${Directory.current.path}/lib/Futures/$futureName";
 
-  // إنشاء المجلدات المطلوبة
   final directories = [
     '$projectPath/data/models',
     '$projectPath/data/LocalData',
     '$projectPath/data/RemoteData',
+    '$projectPath/View',
+    '$projectPath/Widgets',
   ];
 
   for (var dir in directories) {
@@ -84,51 +77,68 @@ void createFutureStructure(String futureName) {
     }
   }
 
-  // إنشاء ملفات الـ Dart في المجلدات الصحيحة
+  // إنشاء ملفات View
   createDartFile(
-      filePath: '$projectPath/View/${futureName}_view.dart',
-      content: createViewFileContent(futureName));
+    filePath: '$projectPath/View/${futureName}MobileView.dart',
+    content: createMobileViewFileContent(futureName),
+  );
+
   createDartFile(
-      filePath: '$projectPath/Widgets/${futureName}_body.dart',
-      content: createBodyFileContent(futureName));
+    filePath: '$projectPath/View/${futureName}TabletView.dart',
+    content: createTabletViewFileContent(futureName),
+  );
+
+  createDartFile(
+    filePath: '$projectPath/View/${futureName}DesktopView.dart',
+    content: createDesktopViewFileContent(futureName),
+  );
+
+  createDartFile(
+    filePath: '$projectPath/View/responsive_${futureName}_view.dart',
+    content: createResponsiveViewFileContent(futureName),
+  );
+
+  // إنشاء ملف Body
+  createDartFile(
+    filePath: '$projectPath/Widgets/${futureName}_body.dart',
+    content: createBodyFileContent(futureName),
+  );
 
   print("تم إنشاء الملفات والمجلدات لـ: $futureName ✅");
 }
 
-// دالة لإضافة route إلى core/routes.dart
 void addRouteToCore(String futureName) {
   final routesFilePath = "${Directory.current.path}/lib/core/route/routes.dart";
   final routesFile = File(routesFilePath);
 
   if (routesFile.existsSync()) {
-    String routeEntry = '''
-      '/$futureName': (context) => ${futureName.capitalize()}View(),
-    ''';
+    String routeEntry =
+        '''
+  // Route for $futureName
+  '/$futureName': (context) => Responsive${futureName.capitalize()}View(),
+''';
 
     String existingContent = routesFile.readAsStringSync();
 
-    if (!existingContent.contains(routeEntry)) {
-      routesFile.writeAsStringSync(existingContent.replaceFirst(
-        '};', // افتراض أن نهاية قائمة الـ routes تحتوي على `};`
-        '  $routeEntry\n};',
-      ));
+    if (!existingContent.contains(routeEntry.trim())) {
+      routesFile.writeAsStringSync(
+        existingContent.replaceFirst('};', '  $routeEntry\n};'),
+      );
       print('Added $futureName route to core/routes.dart ✅');
     } else {
-      print('Route for $futureName already exists in core/route/routes.dart');
+      print('Route for $futureName already exists in core/routes.dart');
     }
   } else {
     print('core/route/routes.dart not found ❌');
   }
 }
 
-// دالة لإضافة export إلى ملف export.dart
 void addExportToFile(String futureName) {
   final exportFilePath = "${Directory.current.path}/lib/exports.dart";
   final exportFile = File(exportFilePath);
 
-  // استخراج اسم المشروع من ملف pubspec.yaml
   final pubspecFile = File("${Directory.current.path}/pubspec.yaml");
-  String projectName = "your_project"; // القيمة الافتراضية
+  String projectName = "your_project";
 
   if (pubspecFile.existsSync()) {
     final pubspecContent = pubspecFile.readAsStringSync();
@@ -138,16 +148,15 @@ void addExportToFile(String futureName) {
     }
   }
 
-  String exportEntry = '''
-export 'package:$projectName/Futures/$futureName/View/${futureName}_view.dart';
+  String exportEntry =
+      '''
+export 'package:$projectName/Futures/$futureName/View/responsive_${futureName}_view.dart';
 ''';
 
   if (exportFile.existsSync()) {
     String existingContent = exportFile.readAsStringSync();
 
-    // تحقق إذا كان الإدخال موجودًا بالفعل
     if (!existingContent.contains(exportEntry.trim())) {
-      // إضافة الإدخال الجديد دون الكتابة فوق المحتوى القديم
       exportFile.writeAsStringSync(exportEntry, mode: FileMode.append);
       print('Added $futureName export to exports.dart ✅');
     } else {
@@ -156,92 +165,134 @@ export 'package:$projectName/Futures/$futureName/View/${futureName}_view.dart';
   } else {
     print('exports.dart not found, creating a new one... ❌');
     exportFile.createSync();
-    exportFile.writeAsStringSync('''
-// Exports for Futures
+    exportFile.writeAsStringSync('''// Exports for Futures
 $exportEntry
-    ''');
+''');
     print('Created and added $futureName export to new exports.dart ✅');
   }
 }
 
-// دالة لإنشاء ملفات Dart
 void createDartFile({required String filePath, String? content}) {
   final dartFile = File(filePath);
 
   if (!dartFile.existsSync()) {
     dartFile.createSync(recursive: true);
-    content != null ? dartFile.writeAsStringSync(content) : null;
+    if (content != null) {
+      dartFile.writeAsStringSync(content);
+    }
     print('Created Dart file: $filePath ✅');
   } else {
     print('Dart file already exists: $filePath');
   }
 }
 
-// محتوى ملف الـ View
-String createViewFileContent(String futureName) {
+String createMobileViewFileContent(String futureName) {
   return '''
-
-import 'package:${pubName()}/exports.dart';
+import 'package:flutter/material.dart';
 import '../Widgets/${futureName}_body.dart';
 
-class ${futureName.capitalize()}View extends StatelessWidget {
-    const ${futureName.capitalize()}View({super.key});
+class ${futureName.capitalize()}MobileView extends StatelessWidget {
+  const ${futureName.capitalize()}MobileView({super.key});
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('$futureName View'),
+        title: const Text('$futureName Mobile View'),
       ),
       body: ${futureName.capitalize()}Body(),
     );
   }
 }
-  ''';
+''';
 }
 
-String createExportsFileContent(String futureName) {
+String createTabletViewFileContent(String futureName) {
   return '''
-export 'package:${pubName()}/Core/route/routes.dart';
-export 'package:flutter/material.dart';
-  ''';
-}
+import 'package:flutter/material.dart';
+import '../Widgets/${futureName}_body.dart';
 
-String createExportsToMainFileContent(String futureName) {
-  return '''
-
-import 'package:${pubName()}/exports.dart';
-void main() {
-  runApp(const MainApp());
-}
-
-class MainApp extends StatelessWidget {
-  const MainApp({super.key});
+class ${futureName.capitalize()}TabletView extends StatelessWidget {
+  const ${futureName.capitalize()}TabletView({super.key});
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      routes: routes,
-      home: const HomeView(),
+    return Scaffold(
+      appBar: AppBar(
+        title: const Text('$futureName Tablet View'),
+      ),
+      body: Center(
+        child: SizedBox(
+          width: 600,
+          child: ${futureName.capitalize()}Body(),
+        ),
+      ),
     );
   }
 }
-
-  ''';
+''';
 }
 
-String createRoutesFileContent(String futureName) {
+String createDesktopViewFileContent(String futureName) {
   return '''
-import 'package:${pubName()}/exports.dart';
+import 'package:flutter/material.dart';
+import '../Widgets/${futureName}_body.dart';
 
-Map<String, Widget Function(BuildContext)> routes = <String, WidgetBuilder>{
+class ${futureName.capitalize()}DesktopView extends StatelessWidget {
+  const ${futureName.capitalize()}DesktopView({super.key});
 
-    
-};
-
-  ''';
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        title: const Text('$futureName Desktop View'),
+      ),
+      body: Center(
+        child: SizedBox(
+          width: 1000,
+          child: ${futureName.capitalize()}Body(),
+        ),
+      ),
+    );
+  }
+}
+''';
 }
 
-// محتوى ملف الـ Body
+String createResponsiveViewFileContent(String futureName) {
+  final pubspecFile = File("${Directory.current.path}/pubspec.yaml");
+  String projectName = "your_project";
+
+  if (pubspecFile.existsSync()) {
+    final pubspecContent = pubspecFile.readAsStringSync();
+    final pubspec = loadYaml(pubspecContent);
+    if (pubspec['name'] != null) {
+      projectName = pubspec['name'];
+    }
+  }
+
+  return '''
+import 'package:flutter/material.dart';
+import 'package:$projectName/constants/BaseResponsiveWidget.dart';
+import '${futureName}MobileView.dart';
+import '${futureName}TabletView.dart';
+import '${futureName}DesktopView.dart';
+
+class Responsive${futureName.capitalize()}View extends StatelessWidget {
+  const Responsive${futureName.capitalize()}View({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return BaseResponsiveWidget(
+      mobileView: ${futureName.capitalize()}MobileView(),
+      tabletView: ${futureName.capitalize()}TabletView(),
+      desktopView: ${futureName.capitalize()}DesktopView(),
+    );
+  }
+}
+''';
+}
+
 String createBodyFileContent(String futureName) {
   return '''
 import 'package:flutter/material.dart';
@@ -254,27 +305,11 @@ class ${futureName.capitalize()}Body extends StatelessWidget {
     );
   }
 }
-  ''';
+''';
 }
 
-// دالة لإضافة أول حرف كـ capital
 extension StringCasingExtension on String {
   String capitalize() {
     return this[0].toUpperCase() + substring(1);
   }
-}
-
-String pubName() {
-  // استخراج اسم المشروع من ملف pubspec.yaml
-  final pubspecFile = File("${Directory.current.path}/pubspec.yaml");
-  String projectName = "your_project"; // القيمة الافتراضية
-
-  if (pubspecFile.existsSync()) {
-    final pubspecContent = pubspecFile.readAsStringSync();
-    final pubspec = loadYaml(pubspecContent);
-    if (pubspec['name'] != null) {
-      projectName = pubspec['name'];
-    }
-  }
-  return projectName;
 }

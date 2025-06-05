@@ -1,10 +1,7 @@
 import 'package:smart_shopping_list/exports.dart';
 
 Map<String, Widget Function(BuildContext)> routes = <String, WidgetBuilder>{
+  // Route for home
 
-    
-        '/home': (context) => HomeView(),
-    
+  // Route for setting
 };
-
-  
