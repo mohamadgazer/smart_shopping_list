@@ -4,7 +4,7 @@ class AppColors {
   // ✅ Light Theme Colors
   static const ColorScheme lightScheme = ColorScheme(
     brightness: Brightness.light,
-    primary: Color(0xFF009688), // Teal
+    primary: Color.fromARGB(255, 214, 116, 24), // Teal
     onPrimary: Colors.white,
     primaryContainer: Color(0xFFB2DFDB),
     onPrimaryContainer: Colors.black,
@@ -34,7 +34,7 @@ class AppColors {
 
     inverseSurface: Colors.black,
     onInverseSurface: Colors.white,
-    inversePrimary: Color(0xFF80CBC4),
+    inversePrimary: Color.fromARGB(255, 156, 177, 62),
 
     shadow: Colors.black54,
     scrim: Colors.black45,

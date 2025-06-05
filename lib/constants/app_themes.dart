@@ -8,7 +8,7 @@ class AppThemes {
     useMaterial3: true,
     brightness: Brightness.light,
     scaffoldBackgroundColor: AppColors.lightScheme.surface,
-    // textTheme: Typography.englishLike2018,
+    textTheme: Typography.englishLike2018,
     appBarTheme: AppBarTheme(
       backgroundColor: AppColors.lightScheme.primary,
       foregroundColor: AppColors.lightScheme.onPrimary,
@@ -25,7 +25,7 @@ class AppThemes {
     useMaterial3: true,
     brightness: Brightness.dark,
     scaffoldBackgroundColor: AppColors.darkScheme.surface,
-    // textTheme: Typography.englishLike2018,
+    textTheme: Typography.englishLike2018,
     appBarTheme: AppBarTheme(
       backgroundColor: AppColors.darkScheme.primary,
       foregroundColor: AppColors.darkScheme.onPrimary,
