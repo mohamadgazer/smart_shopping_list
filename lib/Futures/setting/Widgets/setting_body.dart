@@ -78,27 +78,35 @@ class SettingBody extends StatelessWidget {
           const SizedBox(height: 32),
 
           // 🌙 وضع الإضاءة
-          Card(
-            shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(20),
-            ),
-            elevation: 4,
-            child: Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  Text(
-                    S.of(context).isDarkmode,
-                    style: Theme.of(context).textTheme.bodyLarge,
-                  ),
-                  Switch(
-                    value: isDark,
-                    onChanged: (value) {
-                      context.read<AppCubit>().toggleTheme();
-                    },
-                  ),
-                ],
+          GestureDetector(
+            onTap: () {
+              context.read<AppCubit>().toggleTheme();
+            },
+            child: Card(
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(20),
+              ),
+              elevation: 4,
+              child: Padding(
+                padding: const EdgeInsets.symmetric(
+                  horizontal: 16,
+                  vertical: 8,
+                ),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Text(
+                      S.of(context).isDarkmode,
+                      style: Theme.of(context).textTheme.bodyLarge,
+                    ),
+                    Switch(
+                      value: isDark,
+                      onChanged: (value) {
+                        context.read<AppCubit>().toggleTheme();
+                      },
+                    ),
+                  ],
+                ),
               ),
             ),
           ),
