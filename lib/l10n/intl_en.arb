@@ -1,6 +1,12 @@
 {
   "@@locale": "en",
+  "selectLanguage": "Select Language",
+  "@selectLanguage": {
+    "description": "Title for language selection section"
+  },
   "appTitle": "Smart Assistant",
+  "settings": "Settings",
+  "isDarkmode": "Dark mode",
   "@appTitle": {
     "description": "The title of the app"
   },

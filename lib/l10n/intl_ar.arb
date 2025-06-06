@@ -1,5 +1,12 @@
 {
   "@@locale": "ar",
+  "@@locale": "ar",
+  "selectLanguage": "اختر اللغة",
+  "@selectLanguage": {
+    "description": "عنوان قسم اختيار اللغة"
+  },
+  "settings": "الاعدادات",
+  "isDarkmode": "الوضع المظلم",
   "appTitle": "المساعد الذكي",
   "@appTitle": {
     "description": "عنوان التطبيق"

@@ -50,12 +50,42 @@ class S {
     return Localizations.of<S>(context, S);
   }
 
+  /// `Select Language`
+  String get selectLanguage {
+    return Intl.message(
+      'Select Language',
+      name: 'selectLanguage',
+      desc: 'Title for language selection section',
+      args: [],
+    );
+  }
+
   /// `Smart Assistant`
   String get appTitle {
     return Intl.message(
       'Smart Assistant',
       name: 'appTitle',
       desc: 'The title of the app',
+      args: [],
+    );
+  }
+
+  /// `Settings`
+  String get settings {
+    return Intl.message(
+      'Settings',
+      name: 'settings',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Dark mode`
+  String get isDarkmode {
+    return Intl.message(
+      'Dark mode',
+      name: 'isDarkmode',
+      desc: '',
       args: [],
     );
   }

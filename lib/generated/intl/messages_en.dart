@@ -36,6 +36,10 @@ class MessageLookup extends MessageLookupByLibrary {
         "appTitle": MessageLookupByLibrary.simpleMessage("Smart Assistant"),
         "dayMood": m0,
         "greetUser": m1,
+        "isDarkmode": MessageLookupByLibrary.simpleMessage("Dark mode"),
+        "selectLanguage":
+            MessageLookupByLibrary.simpleMessage("Select Language"),
+        "settings": MessageLookupByLibrary.simpleMessage("Settings"),
         "tasksCount": m2
       };
 }

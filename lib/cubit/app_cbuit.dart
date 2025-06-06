@@ -1,17 +1,18 @@
-import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:smart_shopping_list/cubit/app_state.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:smart_shopping_list/exports.dart';
 
 class AppCubit extends Cubit<AppState> {
   AppCubit() : super(AppState.initial()) {
     _loadSettings();
   }
+  bool isDarkMode = false;
 
   Future<void> _loadSettings() async {
     final prefs = await SharedPreferences.getInstance();
 
     final themeStr = prefs.getString('theme') ?? 'system';
     final themeMode = _parseTheme(themeStr);
+    isDarkMode = themeMode == ThemeMode.dark ? true : false;
 
     final localeCode = prefs.getString('locale') ?? 'en';
     final locale = Locale(localeCode);
@@ -31,7 +32,8 @@ class AppCubit extends Cubit<AppState> {
 
     final prefs = await SharedPreferences.getInstance();
     await prefs.setString('theme', newMode.name);
-
+    // to change toggle
+    isDarkMode = !isDarkMode;
     emit(state.copyWith(themeMode: newMode));
   }
 
