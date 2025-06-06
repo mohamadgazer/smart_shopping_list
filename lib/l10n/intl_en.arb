@@ -1,0 +1,31 @@
+{
+  "@@locale": "en",
+  "appTitle": "Smart Assistant",
+  "@appTitle": {
+    "description": "The title of the app"
+  },
+  "greetUser": "Good {timeOfDay}, {name}!",
+  "@greetUser": {
+    "description": "Greeting user based on time of day",
+    "placeholders": {
+      "timeOfDay": {},
+      "name": {}
+    }
+  },
+  "tasksCount": "{count, plural, =0{You have nothing to do 🎉} =1{One task left} other{{count} tasks waiting}}",
+  "@tasksCount": {
+    "description": "How many tasks user has",
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "dayMood": "{day, select, Friday{It's Friday! Time to relax 🍹} Monday{Back to work 💼} other{Just another day}}",
+  "@dayMood": {
+    "description": "A message based on the day of the week",
+    "placeholders": {
+      "day": {}
+    }
+  }
+}

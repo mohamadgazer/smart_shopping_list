@@ -1,9 +1,11 @@
 import 'package:device_preview/device_preview.dart';
 import 'package:flutter/foundation.dart';
+import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:smart_shopping_list/constants/app_button.dart';
 import 'package:smart_shopping_list/constants/app_themes.dart';
 import 'package:smart_shopping_list/exports.dart';
+import 'package:smart_shopping_list/generated/l10n.dart';
 
 void main() => runApp(
   DevicePreview(
@@ -23,6 +25,14 @@ class MainApp extends StatelessWidget {
       splitScreenMode: true,
       builder: (context, child) {
         return MaterialApp(
+          locale: Locale("en"),
+          localizationsDelegates: [
+            S.delegate,
+            GlobalMaterialLocalizations.delegate,
+            GlobalWidgetsLocalizations.delegate,
+            GlobalCupertinoLocalizations.delegate,
+          ],
+          supportedLocales: S.delegate.supportedLocales,
           routes: routes,
           home: child,
           theme: AppThemes.lightTheme,
@@ -76,6 +86,7 @@ class MobileLayout extends StatelessWidget {
           children: [
             Text('هذه واجهة موبايل', style: TextStyle(fontSize: 16.sp)),
             SizedBox(height: 20.h),
+            LocalView(),
             AppButton(
               type: AppButtonType.outlined,
               label: "سجل دخول",
@@ -85,6 +96,45 @@ class MobileLayout extends StatelessWidget {
           ],
         ),
       ),
+    );
+  }
+}
+
+class LocalView extends StatelessWidget {
+  const LocalView({super.key});
+  String getTimeOfDayGreeting() {
+    final hour = DateTime.now().hour;
+    if (hour < 12) return "morning";
+    if (hour < 18) return "afternoon";
+    return "evening";
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final now = DateTime.now();
+    final locale = Localizations.localeOf(context).languageCode;
+
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Text(
+          S.of(context).appTitle,
+          style: Theme.of(context).textTheme.headlineMedium,
+        ),
+        Text(S.of(context).greetUser(getTimeOfDayGreeting(), "Ahmed")),
+        Text(S.of(context).tasksCount(3)),
+        Text(
+          S
+              .of(context)
+              .dayMood(
+                now.weekday == 5
+                    ? "Friday"
+                    : now.weekday == 1
+                    ? "Monday"
+                    : "Other",
+              ),
+        ),
+      ],
     );
   }
 }

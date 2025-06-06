@@ -1,0 +1,28 @@
+{
+  "@@locale": "ar",
+  "appTitle": "المساعد الذكي",
+  "@appTitle": {
+    "description": "عنوان التطبيق"
+  },
+  "greetUser": "صباح {timeOfDay}، يا {name}!",
+  "@greetUser": {
+    "description": "تحية للمستخدم حسب الوقت",
+    "placeholders": {
+      "timeOfDay": {},
+      "name": {}
+    }
+  },
+  "tasksCount": "{count, plural, =0{ما عندك ولا مهمة 🎉} =1{مهمة واحدة متبقية} other{{count} مهام بانتظارك}}",
+  "@tasksCount": {
+    "description": "عدد المهام المتبقية",
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "dayMood": "{day, select, Friday{إنه يوم الجمعة! وقت الراحة 🍹} Monday{عدنا للعمل 💼} other{يوم عادي آخر}}",
+  "@dayMood": {
+    "description": "رسالة حسب اليوم"
+  }
+}
