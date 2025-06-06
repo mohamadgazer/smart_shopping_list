@@ -1,9 +1,12 @@
 import 'package:device_preview/device_preview.dart';
 import 'package:flutter/foundation.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:smart_shopping_list/constants/app_button.dart';
 import 'package:smart_shopping_list/constants/app_themes.dart';
+import 'package:smart_shopping_list/cubit/app_cbuit.dart';
+import 'package:smart_shopping_list/cubit/app_state.dart';
 import 'package:smart_shopping_list/exports.dart';
 import 'package:smart_shopping_list/generated/l10n.dart';
 
@@ -13,6 +16,7 @@ void main() => runApp(
     builder: (context) => MainApp(), // Wrap your app
   ),
 );
+int i = 0;
 
 class MainApp extends StatelessWidget {
   const MainApp({super.key});
@@ -24,20 +28,27 @@ class MainApp extends StatelessWidget {
       minTextAdapt: true,
       splitScreenMode: true,
       builder: (context, child) {
-        return MaterialApp(
-          locale: Locale("en"),
-          localizationsDelegates: [
-            S.delegate,
-            GlobalMaterialLocalizations.delegate,
-            GlobalWidgetsLocalizations.delegate,
-            GlobalCupertinoLocalizations.delegate,
-          ],
-          supportedLocales: S.delegate.supportedLocales,
-          routes: routes,
-          home: child,
-          theme: AppThemes.lightTheme,
-          darkTheme: AppThemes.darkTheme,
-          themeMode: ThemeMode.system,
+        return MultiBlocProvider(
+          providers: [BlocProvider(create: (context) => AppCubit())],
+          child: BlocBuilder<AppCubit, AppState>(
+            builder: (context, state) {
+              return MaterialApp(
+                locale: state.locale,
+                localizationsDelegates: [
+                  S.delegate,
+                  GlobalMaterialLocalizations.delegate,
+                  GlobalWidgetsLocalizations.delegate,
+                  GlobalCupertinoLocalizations.delegate,
+                ],
+                supportedLocales: S.delegate.supportedLocales,
+                routes: routes,
+                home: child,
+                theme: AppThemes.lightTheme,
+                darkTheme: AppThemes.darkTheme,
+                themeMode: state.themeMode,
+              );
+            },
+          ),
         );
       },
       child: const ResponsiveHomePage(),
@@ -93,6 +104,20 @@ class MobileLayout extends StatelessWidget {
               icon: Icons.login,
               onPressed: () => print("ضغطت"),
             ),
+            ElevatedButton(
+              onPressed: () {
+                if (i == 0) {
+                  context.read<AppCubit>().changeLocale(const Locale('ar'));
+                  i += 1;
+                  print(i);
+                } else {
+                  context.read<AppCubit>().changeLocale(const Locale('en'));
+                  i -= 1;
+                  print(i);
+                }
+              },
+              child: Text('عربي'),
+            ),
           ],
         ),
       ),
@@ -122,7 +147,7 @@ class LocalView extends StatelessWidget {
           style: Theme.of(context).textTheme.headlineMedium,
         ),
         Text(S.of(context).greetUser(getTimeOfDayGreeting(), "Ahmed")),
-        Text(S.of(context).tasksCount(3)),
+        Text(S.of(context).tasksCount(0)),
         Text(
           S
               .of(context)
