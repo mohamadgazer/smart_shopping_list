@@ -1,6 +1,7 @@
 import 'package:device_preview/device_preview.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:smart_shopping_list/constants/app_button.dart';
 import 'package:smart_shopping_list/constants/app_themes.dart';
 import 'package:smart_shopping_list/exports.dart';
 
@@ -75,12 +76,11 @@ class MobileLayout extends StatelessWidget {
           children: [
             Text('هذه واجهة موبايل', style: TextStyle(fontSize: 16.sp)),
             SizedBox(height: 20.h),
-            ElevatedButton(
-              onPressed: () {},
-              style: ElevatedButton.styleFrom(
-                minimumSize: Size(double.infinity, 48.h), // ارتفاع متناسب
-              ),
-              child: Text('زر'),
+            AppButton(
+              type: AppButtonType.outlined,
+              label: "سجل دخول",
+              icon: Icons.login,
+              onPressed: () => print("ضغطت"),
             ),
           ],
         ),
