@@ -100,7 +100,7 @@ class SettingBody extends StatelessWidget {
                       style: Theme.of(context).textTheme.bodyLarge,
                     ),
                     Switch(
-                      value: isDark,
+                      value: context.read<AppCubit>().isDarkMode,
                       onChanged: (value) {
                         context.read<AppCubit>().toggleTheme();
                       },
